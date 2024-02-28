@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+    php:
+        build:
+            context: .
+            target: php
+            dockerfile: docker/Dockerfile
+            args:
+                uid: ${WWWUSER}
+        environment:
+            - APACHE_RUN_USER=#${WWWUSER}
+            - APACHE_RUN_GROUP=#${WWWUSER}
+        ports:
+            - 8080:80
+            - 5173:5173
+        networks:
+            - internal
+        volumes:
+            - ./bolt-project:/var/www/html:rw
+        restart: unless-stopped
+
+networks:
+    internal:
+        name: bolt-net
+        driver: bridge
