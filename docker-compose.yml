@@ -9,7 +9,7 @@ services:
                 uid: ${WWWUSER}
         environment:
             - APACHE_RUN_USER=#${WWWUSER}
-            - APACHE_RUN_GROUP=#${WWWUSER}
+            - APACHE_RUN_GROUP=#${WWWGROUP}
         ports:
             - 8080:80
             - 5173:5173

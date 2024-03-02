@@ -3,10 +3,8 @@ FROM php:8.2-apache-bullseye AS php
 # 1. development packages
 RUN apt-get update && \
 	apt-get install -y \
-	git \
 	zip \
 	curl \
-	sudo \
 	unzip \
 	libicu-dev \
 	libbz2-dev \
@@ -16,7 +14,6 @@ RUN apt-get update && \
 	libreadline-dev \
 	libfreetype6-dev \
 	g++ \
-	zsh \
 	libzip-dev && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
@@ -48,10 +45,10 @@ RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg && \
 	zip && \
 	rm -rf /tmp/*
 
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-	apt-get install -y nodejs && \
-	apt-get clean && \
-	rm -rf /var/lib/apt/lists/*
+# RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+# 	apt-get install -y nodejs && \
+# 	apt-get clean && \
+# 	rm -rf /var/lib/apt/lists/*
 
 # 5. composer
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
@@ -68,6 +65,7 @@ USER devuser
 
 CMD \
 	# npm ci -d && npm run build && \
+	rm -rf vendor && rm -rf var/cache && rm -rf var/log && rm -rf public/assets && rm -rf public/bundles && rm -rf public/thumbs/* && \
 	composer install --prefer-dist --no-progress --no-suggest && \
 	composer clear-cache && \
 	apache2-foreground
