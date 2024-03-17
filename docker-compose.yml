@@ -7,6 +7,7 @@ services:
             dockerfile: docker/Dockerfile
             args:
                 uid: ${WWWUSER}
+        container_name: bolt-cms-site
         environment:
             - APACHE_RUN_USER=#${WWWUSER}
             - APACHE_RUN_GROUP=#${WWWGROUP}
@@ -15,11 +16,15 @@ services:
             - 5173:5173
         networks:
             - internal
+            - proxy
         volumes:
             - ./bolt-project:/var/www/html:rw
-        restart: unless-stopped
+        restart: always
 
 networks:
     internal:
         name: bolt-net
         driver: bridge
+    proxy:
+        name: proxy-net-external
+        external: true
